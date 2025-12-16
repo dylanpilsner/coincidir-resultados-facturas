@@ -1,3 +1,12 @@
+function normalizeTrailingMinus(s) {
+  const str = String(s).trim();
+
+  if (str.endsWith("-")) {
+    return "-" + str.slice(0, -1).trim();
+  }
+  return str;
+}
+
 function getCorrectBill(nums, numToReach) {
   const exactImportBill = nums.find((i) => i === numToReach);
 
@@ -32,8 +41,16 @@ function getCorrectBill(nums, numToReach) {
 const form = document.querySelector(".form");
 const event = form.addEventListener("submit", (e) => {
   e.preventDefault();
-  const inputs = document.querySelector(".amount").value;
-  const numsArray = inputs.split("\n").map((i) => parseFloat(i));
+  const inputs = document.querySelector(".amount").value.replaceAll(".", "");
+
+  const numsArrayToCorrect = inputs.split("\n");
+
+  for (let i = 0; i < numsArrayToCorrect.length; i++) {
+    numsArrayToCorrect[i] = normalizeTrailingMinus(numsArrayToCorrect[i]);
+  }
+
+  const numsArray = numsArrayToCorrect.map((i) => parseFloat(i));
+
   const amountToReach = parseFloat(
     document.querySelector(".amount-to-reach").value
   );
